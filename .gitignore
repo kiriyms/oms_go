@@ -1,0 +1,5 @@
+.vscode/
+.env
+.prod.env
+.secrets
+bin/
