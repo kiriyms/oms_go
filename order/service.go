@@ -10,7 +10,7 @@ type service struct {
 	store OrderStore
 }
 
-func NewOrderService(store OrderStore) OrderService {
+func NewOrderService(store OrderStore) *service {
 	return &service{store: store}
 }
 

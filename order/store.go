@@ -9,7 +9,7 @@ type OrderStore interface {
 type store struct {
 }
 
-func NewStore() OrderStore {
+func NewStore() *store {
 	return &store{}
 }
 
