@@ -10,3 +10,8 @@ Practice restaurant order management system built in Go
 
 - Kafka
 - gRPC
+
+## TODO
+
+- Add slog logger to "common"
+- Make logging aggregated somewhere
