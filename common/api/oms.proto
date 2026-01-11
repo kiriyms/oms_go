@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "github.com/kiriyms/oms_go-common";
+option go_package = "github.com/kiriyms/oms_go-common/api";
 
 package api;
 
@@ -12,7 +12,7 @@ message Order {
 }
 
 service OrderService {
-    rpc CreateOrder(CreateOrderRequest) return (Order);
+    rpc CreateOrder(CreateOrderRequest) returns (Order);
 }
 
 message Item {
