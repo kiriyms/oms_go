@@ -23,8 +23,11 @@ func main() {
 
 	store := NewStore()
 	service := NewOrderService(store)
+	NewHandler(grpcServer)
 
 	service.CreateOrder(context.Background())
+
+	log.Println("gRPC server listening on", grpcAddr)
 
 	if err := grpcServer.Serve(l); err != nil {
 		log.Fatal(err.Error())
