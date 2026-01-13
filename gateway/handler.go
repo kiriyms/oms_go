@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 
 	common "github.com/kiriyms/oms_go-common"
@@ -18,7 +19,7 @@ func NewHandler(client pb.OrderServiceClient) *handler {
 }
 
 func (h *handler) registerRoutes(mux *http.ServeMux) {
-	mux.HandleFunc("POST /api/order", h.HandleCreateOrder)
+	mux.HandleFunc("POST /api/customers/{customerID}/order", h.HandleCreateOrder)
 }
 
 func (h *handler) HandleCreateOrder(w http.ResponseWriter, r *http.Request) {
@@ -26,7 +27,7 @@ func (h *handler) HandleCreateOrder(w http.ResponseWriter, r *http.Request) {
 
 	var items []*pb.ItemWithQuantity
 	if err := common.ReadJSON(r, &items); err != nil {
-		common.WriteError(w, http.StatusBadRequest, "Invalid request payload")
+		common.WriteError(w, http.StatusBadRequest, fmt.Sprintf("Invalid request payload: %v", err))
 		return
 	}
 
