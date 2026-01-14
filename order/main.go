@@ -23,7 +23,7 @@ func main() {
 
 	store := NewStore()
 	service := NewOrderService(store)
-	NewHandler(grpcServer)
+	NewHandler(grpcServer, service)
 
 	service.CreateOrder(context.Background())
 
