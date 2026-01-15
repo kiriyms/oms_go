@@ -9,7 +9,7 @@ import (
 )
 
 type OrderService interface {
-	CreateOrder(context.Context) error
+	CreateOrder(context.Context, *pb.Order) error
 	ValidateOrder(context.Context, *pb.CreateOrderRequest) error
 }
 
@@ -21,8 +21,8 @@ func NewOrderService(store OrderStore) *service {
 	return &service{store: store}
 }
 
-func (s *service) CreateOrder(ctx context.Context) error {
-	return s.store.Create(ctx)
+func (s *service) CreateOrder(ctx context.Context, o *pb.Order) error {
+	return s.store.Create(ctx, o)
 }
 
 func (s *service) ValidateOrder(ctx context.Context, p *pb.CreateOrderRequest) error {
