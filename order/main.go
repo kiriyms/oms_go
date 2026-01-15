@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"log"
 	"net"
 
@@ -11,6 +10,7 @@ import (
 
 var (
 	grpcAddr = common.GetEnv("GRPC_ADDR", "localhost:50051")
+	dbPath   = common.GetEnv("DB_PATH", "./db/db.db")
 )
 
 func main() {
@@ -21,11 +21,14 @@ func main() {
 	}
 	defer l.Close()
 
-	store := NewStore()
+	store, err := NewStore(dbPath)
+	if err != nil {
+		log.Fatalf("Failed to create store: %v", err)
+	}
+	defer store.Close()
+
 	service := NewOrderService(store)
 	NewHandler(grpcServer, service)
-
-	service.CreateOrder(context.Background())
 
 	log.Println("gRPC server listening on", grpcAddr)
 
