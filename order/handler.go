@@ -31,7 +31,23 @@ func (h *Handler) CreateOrder(ctx context.Context, p *pb.CreateOrderRequest) (*p
 		ID:         uuid.New().String(),
 		CustomerID: p.CustomerID,
 		Status:     "PENDING",
-		Items:      []*pb.Item{},
+		Items:      h.mapItemWithQuantityToItem(p.Items),
+	}
+
+	err := h.service.CreateOrder(ctx, o)
+	if err != nil {
+		return nil, err
 	}
 	return o, nil
+}
+
+func (h *Handler) mapItemWithQuantityToItem(iwq []*pb.ItemWithQuantity) []*pb.Item {
+	items := make([]*pb.Item, 0)
+	for _, item := range iwq {
+		items = append(items, &pb.Item{
+			ID:       item.ID,
+			Quantity: item.Quantity,
+		})
+	}
+	return items
 }
