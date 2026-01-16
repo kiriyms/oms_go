@@ -11,6 +11,8 @@ import (
 type OrderService interface {
 	CreateOrder(context.Context, *pb.Order) error
 	ValidateOrder(context.Context, *pb.CreateOrderRequest) error
+	GetOrder(context.Context, string) (*pb.Order, error)
+	GetUserOrders(context.Context, string) ([]*pb.Order, error)
 }
 
 type service struct {
@@ -36,6 +38,14 @@ func (s *service) ValidateOrder(ctx context.Context, p *pb.CreateOrderRequest) e
 	// validate with store service
 
 	return nil
+}
+
+func (s *service) GetOrder(ctx context.Context, id string) (*pb.Order, error) {
+	return s.store.GetOrder(ctx, id)
+}
+
+func (s *service) GetUserOrders(ctx context.Context, customerID string) ([]*pb.Order, error) {
+	return s.store.GetUserOrders(ctx, customerID)
 }
 
 func mergeItemsQuantities(items []*pb.ItemWithQuantity) []*pb.ItemWithQuantity {
