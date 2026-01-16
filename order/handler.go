@@ -41,6 +41,20 @@ func (h *Handler) CreateOrder(ctx context.Context, p *pb.CreateOrderRequest) (*p
 	return o, nil
 }
 
+func (h *Handler) GetOrder(ctx context.Context, p *pb.GetOrderRequest) (*pb.Order, error) {
+	return h.service.GetOrder(ctx, p.ID)
+}
+
+func (h *Handler) GetUserOrders(ctx context.Context, p *pb.GetUserOrdersRequest) (*pb.GetUserOrdersResponse, error) {
+	orders, err := h.service.GetUserOrders(ctx, p.CustomerID)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.GetUserOrdersResponse{
+		Orders: orders,
+	}, nil
+}
+
 func (h *Handler) mapItemWithQuantityToItem(iwq []*pb.ItemWithQuantity) []*pb.Item {
 	items := make([]*pb.Item, 0)
 	for _, item := range iwq {
