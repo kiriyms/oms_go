@@ -23,6 +23,8 @@ func NewHandler(client pb.OrderServiceClient) *handler {
 
 func (h *handler) registerRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("POST /api/customers/{customerID}/order", h.HandleCreateOrder)
+	mux.HandleFunc("GET /api/orders/{orderID}", h.HandleGetOrder)
+	mux.HandleFunc("GET /api/customers/{customerID}/orders", h.HandleGetUserOrders)
 }
 
 func (h *handler) HandleCreateOrder(w http.ResponseWriter, r *http.Request) {
@@ -55,6 +57,46 @@ func (h *handler) HandleCreateOrder(w http.ResponseWriter, r *http.Request) {
 	}
 
 	common.WriteJSON(w, http.StatusCreated, o)
+}
+
+func (h *handler) HandleGetOrder(w http.ResponseWriter, r *http.Request) {
+	orderID := r.PathValue("orderID")
+
+	o, err := h.client.GetOrder(r.Context(), &pb.GetOrderRequest{
+		ID: orderID,
+	})
+	rStatus := status.Convert(err)
+	if rStatus != nil {
+		if rStatus.Code() != codes.InvalidArgument {
+			common.WriteError(w, http.StatusBadRequest, rStatus.Message())
+			return
+		}
+
+		common.WriteError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	common.WriteJSON(w, http.StatusOK, o)
+}
+
+func (h *handler) HandleGetUserOrders(w http.ResponseWriter, r *http.Request) {
+	customerID := r.PathValue("customerID")
+
+	o, err := h.client.GetUserOrders(r.Context(), &pb.GetUserOrdersRequest{
+		CustomerID: customerID,
+	})
+	rStatus := status.Convert(err)
+	if rStatus != nil {
+		if rStatus.Code() != codes.InvalidArgument {
+			common.WriteError(w, http.StatusBadRequest, rStatus.Message())
+			return
+		}
+
+		common.WriteError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	common.WriteJSON(w, http.StatusOK, o)
 }
 
 func validateItems(items []*pb.ItemWithQuantity) error {
