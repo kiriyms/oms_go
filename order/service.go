@@ -13,6 +13,7 @@ type OrderService interface {
 	ValidateOrder(context.Context, *pb.CreateOrderRequest) error
 	GetOrder(context.Context, string) (*pb.Order, error)
 	GetUserOrders(context.Context, string) ([]*pb.Order, error)
+	PatchOrderStatus(context.Context, string, pb.OrderStatus) (*pb.Order, error)
 }
 
 type service struct {
@@ -46,6 +47,10 @@ func (s *service) GetOrder(ctx context.Context, id string) (*pb.Order, error) {
 
 func (s *service) GetUserOrders(ctx context.Context, customerID string) ([]*pb.Order, error) {
 	return s.store.GetUserOrders(ctx, customerID)
+}
+
+func (s *service) PatchOrderStatus(ctx context.Context, orderID string, status pb.OrderStatus) (*pb.Order, error) {
+	return s.store.PatchOrderStatus(ctx, orderID, status)
 }
 
 func mergeItemsQuantities(items []*pb.ItemWithQuantity) []*pb.ItemWithQuantity {

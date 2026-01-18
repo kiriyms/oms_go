@@ -21,6 +21,58 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type OrderStatus int32
+
+const (
+	OrderStatus_UNKNOWN   OrderStatus = 0
+	OrderStatus_PENDING   OrderStatus = 1
+	OrderStatus_COMPLETED OrderStatus = 2
+	OrderStatus_CANCELED  OrderStatus = 3
+)
+
+// Enum value maps for OrderStatus.
+var (
+	OrderStatus_name = map[int32]string{
+		0: "UNKNOWN",
+		1: "PENDING",
+		2: "COMPLETED",
+		3: "CANCELED",
+	}
+	OrderStatus_value = map[string]int32{
+		"UNKNOWN":   0,
+		"PENDING":   1,
+		"COMPLETED": 2,
+		"CANCELED":  3,
+	}
+)
+
+func (x OrderStatus) Enum() *OrderStatus {
+	p := new(OrderStatus)
+	*p = x
+	return p
+}
+
+func (x OrderStatus) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (OrderStatus) Descriptor() protoreflect.EnumDescriptor {
+	return file_api_oms_proto_enumTypes[0].Descriptor()
+}
+
+func (OrderStatus) Type() protoreflect.EnumType {
+	return &file_api_oms_proto_enumTypes[0]
+}
+
+func (x OrderStatus) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use OrderStatus.Descriptor instead.
+func (OrderStatus) EnumDescriptor() ([]byte, []int) {
+	return file_api_oms_proto_rawDescGZIP(), []int{0}
+}
+
 type Order struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ID            string                 `protobuf:"bytes,1,opt,name=ID,proto3" json:"ID,omitempty"`
@@ -393,6 +445,58 @@ func (x *GetUserOrdersResponse) GetOrders() []*Order {
 	return nil
 }
 
+type PatchOrderStatusRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	OrderID       string                 `protobuf:"bytes,1,opt,name=orderID,proto3" json:"orderID,omitempty"`
+	Status        OrderStatus            `protobuf:"varint,2,opt,name=status,proto3,enum=api.OrderStatus" json:"status,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PatchOrderStatusRequest) Reset() {
+	*x = PatchOrderStatusRequest{}
+	mi := &file_api_oms_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PatchOrderStatusRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PatchOrderStatusRequest) ProtoMessage() {}
+
+func (x *PatchOrderStatusRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_oms_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PatchOrderStatusRequest.ProtoReflect.Descriptor instead.
+func (*PatchOrderStatusRequest) Descriptor() ([]byte, []int) {
+	return file_api_oms_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *PatchOrderStatusRequest) GetOrderID() string {
+	if x != nil {
+		return x.OrderID
+	}
+	return ""
+}
+
+func (x *PatchOrderStatusRequest) GetStatus() OrderStatus {
+	if x != nil {
+		return x.Status
+	}
+	return OrderStatus_UNKNOWN
+}
+
 var File_api_oms_proto protoreflect.FileDescriptor
 
 const file_api_oms_proto_rawDesc = "" +
@@ -426,13 +530,23 @@ const file_api_oms_proto_rawDesc = "" +
 	"customerID\";\n" +
 	"\x15GetUserOrdersResponse\x12\"\n" +
 	"\x06Orders\x18\x01 \x03(\v2\n" +
-	".api.OrderR\x06Orders2\xb8\x01\n" +
+	".api.OrderR\x06Orders\"]\n" +
+	"\x17PatchOrderStatusRequest\x12\x18\n" +
+	"\aorderID\x18\x01 \x01(\tR\aorderID\x12(\n" +
+	"\x06status\x18\x02 \x01(\x0e2\x10.api.OrderStatusR\x06status*D\n" +
+	"\vOrderStatus\x12\v\n" +
+	"\aUNKNOWN\x10\x00\x12\v\n" +
+	"\aPENDING\x10\x01\x12\r\n" +
+	"\tCOMPLETED\x10\x02\x12\f\n" +
+	"\bCANCELED\x10\x032\xf6\x01\n" +
 	"\fOrderService\x122\n" +
 	"\vCreateOrder\x12\x17.api.CreateOrderRequest\x1a\n" +
 	".api.Order\x12,\n" +
 	"\bGetOrder\x12\x14.api.GetOrderRequest\x1a\n" +
 	".api.Order\x12F\n" +
-	"\rGetUserOrders\x12\x19.api.GetUserOrdersRequest\x1a\x1a.api.GetUserOrdersResponseB&Z$github.com/kiriyms/oms_go-common/apib\x06proto3"
+	"\rGetUserOrders\x12\x19.api.GetUserOrdersRequest\x1a\x1a.api.GetUserOrdersResponse\x12<\n" +
+	"\x10PatchOrderStatus\x12\x1c.api.PatchOrderStatusRequest\x1a\n" +
+	".api.OrderB&Z$github.com/kiriyms/oms_go-common/apib\x06proto3"
 
 var (
 	file_api_oms_proto_rawDescOnce sync.Once
@@ -446,31 +560,37 @@ func file_api_oms_proto_rawDescGZIP() []byte {
 	return file_api_oms_proto_rawDescData
 }
 
-var file_api_oms_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_api_oms_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_api_oms_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_api_oms_proto_goTypes = []any{
-	(*Order)(nil),                 // 0: api.Order
-	(*Item)(nil),                  // 1: api.Item
-	(*ItemWithQuantity)(nil),      // 2: api.ItemWithQuantity
-	(*CreateOrderRequest)(nil),    // 3: api.CreateOrderRequest
-	(*GetOrderRequest)(nil),       // 4: api.GetOrderRequest
-	(*GetUserOrdersRequest)(nil),  // 5: api.GetUserOrdersRequest
-	(*GetUserOrdersResponse)(nil), // 6: api.GetUserOrdersResponse
+	(OrderStatus)(0),                // 0: api.OrderStatus
+	(*Order)(nil),                   // 1: api.Order
+	(*Item)(nil),                    // 2: api.Item
+	(*ItemWithQuantity)(nil),        // 3: api.ItemWithQuantity
+	(*CreateOrderRequest)(nil),      // 4: api.CreateOrderRequest
+	(*GetOrderRequest)(nil),         // 5: api.GetOrderRequest
+	(*GetUserOrdersRequest)(nil),    // 6: api.GetUserOrdersRequest
+	(*GetUserOrdersResponse)(nil),   // 7: api.GetUserOrdersResponse
+	(*PatchOrderStatusRequest)(nil), // 8: api.PatchOrderStatusRequest
 }
 var file_api_oms_proto_depIdxs = []int32{
-	1, // 0: api.Order.Items:type_name -> api.Item
-	2, // 1: api.CreateOrderRequest.Items:type_name -> api.ItemWithQuantity
-	0, // 2: api.GetUserOrdersResponse.Orders:type_name -> api.Order
-	3, // 3: api.OrderService.CreateOrder:input_type -> api.CreateOrderRequest
-	4, // 4: api.OrderService.GetOrder:input_type -> api.GetOrderRequest
-	5, // 5: api.OrderService.GetUserOrders:input_type -> api.GetUserOrdersRequest
-	0, // 6: api.OrderService.CreateOrder:output_type -> api.Order
-	0, // 7: api.OrderService.GetOrder:output_type -> api.Order
-	6, // 8: api.OrderService.GetUserOrders:output_type -> api.GetUserOrdersResponse
-	6, // [6:9] is the sub-list for method output_type
-	3, // [3:6] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	2, // 0: api.Order.Items:type_name -> api.Item
+	3, // 1: api.CreateOrderRequest.Items:type_name -> api.ItemWithQuantity
+	1, // 2: api.GetUserOrdersResponse.Orders:type_name -> api.Order
+	0, // 3: api.PatchOrderStatusRequest.status:type_name -> api.OrderStatus
+	4, // 4: api.OrderService.CreateOrder:input_type -> api.CreateOrderRequest
+	5, // 5: api.OrderService.GetOrder:input_type -> api.GetOrderRequest
+	6, // 6: api.OrderService.GetUserOrders:input_type -> api.GetUserOrdersRequest
+	8, // 7: api.OrderService.PatchOrderStatus:input_type -> api.PatchOrderStatusRequest
+	1, // 8: api.OrderService.CreateOrder:output_type -> api.Order
+	1, // 9: api.OrderService.GetOrder:output_type -> api.Order
+	7, // 10: api.OrderService.GetUserOrders:output_type -> api.GetUserOrdersResponse
+	1, // 11: api.OrderService.PatchOrderStatus:output_type -> api.Order
+	8, // [8:12] is the sub-list for method output_type
+	4, // [4:8] is the sub-list for method input_type
+	4, // [4:4] is the sub-list for extension type_name
+	4, // [4:4] is the sub-list for extension extendee
+	0, // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_api_oms_proto_init() }
@@ -483,13 +603,14 @@ func file_api_oms_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_oms_proto_rawDesc), len(file_api_oms_proto_rawDesc)),
-			NumEnums:      0,
-			NumMessages:   7,
+			NumEnums:      1,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_api_oms_proto_goTypes,
 		DependencyIndexes: file_api_oms_proto_depIdxs,
+		EnumInfos:         file_api_oms_proto_enumTypes,
 		MessageInfos:      file_api_oms_proto_msgTypes,
 	}.Build()
 	File_api_oms_proto = out.File

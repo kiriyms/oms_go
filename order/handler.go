@@ -55,6 +55,10 @@ func (h *Handler) GetUserOrders(ctx context.Context, p *pb.GetUserOrdersRequest)
 	}, nil
 }
 
+func (h *Handler) PatchOrderStatus(ctx context.Context, p *pb.PatchOrderStatusRequest) (*pb.Order, error) {
+	return h.service.PatchOrderStatus(ctx, p.OrderID, p.Status)
+}
+
 func (h *Handler) mapItemWithQuantityToItem(iwq []*pb.ItemWithQuantity) []*pb.Item {
 	items := make([]*pb.Item, 0)
 	for _, item := range iwq {

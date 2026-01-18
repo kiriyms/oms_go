@@ -15,6 +15,14 @@ service OrderService {
   rpc CreateOrder(CreateOrderRequest) returns (Order);
   rpc GetOrder(GetOrderRequest) returns (Order);
   rpc GetUserOrders(GetUserOrdersRequest) returns (GetUserOrdersResponse);
+  rpc PatchOrderStatus(PatchOrderStatusRequest) returns (Order);
+}
+
+enum OrderStatus {
+  UNKNOWN   = 0;
+  PENDING   = 1;
+  COMPLETED = 2;
+  CANCELED  = 3;
 }
 
 message Item {
@@ -44,4 +52,9 @@ message GetUserOrdersRequest {
 
 message GetUserOrdersResponse {
   repeated Order Orders = 1;
+}
+
+message PatchOrderStatusRequest {
+  string      orderID = 1;
+  OrderStatus status  = 2;
 }

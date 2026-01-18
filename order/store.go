@@ -15,6 +15,7 @@ type OrderStore interface {
 	Create(context.Context, *pb.Order) error
 	GetOrder(context.Context, string) (*pb.Order, error)
 	GetUserOrders(context.Context, string) ([]*pb.Order, error)
+	PatchOrderStatus(context.Context, string, pb.OrderStatus) (*pb.Order, error)
 	Close() error
 }
 
@@ -214,14 +215,28 @@ func (s *store) GetUserOrders(ctx context.Context, userID string) ([]*pb.Order, 
 	return orders, nil
 }
 
+func (s *store) PatchOrderStatus(ctx context.Context, orderID string, status pb.OrderStatus) (*pb.Order, error) {
+	_, err := s.db.ExecContext(ctx, `
+		UPDATE orders
+		SET status = ?
+		WHERE id = ?
+	`, status.String(), orderID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return s.GetOrder(ctx, orderID)
+}
+
 func (s *store) Close() error {
 	err := s.db.Close()
 	return err
 }
 
-func buildInQuery(base string, ids []string) (string, []interface{}) {
+func buildInQuery(base string, ids []string) (string, []any) {
 	placeholders := make([]string, len(ids))
-	args := make([]interface{}, len(ids))
+	args := make([]any, len(ids))
 
 	for i, id := range ids {
 		placeholders[i] = "?"
