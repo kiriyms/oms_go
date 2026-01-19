@@ -3,4 +3,4 @@
 .prod.env
 .secrets
 bin/
-/order/db
+/*/db
