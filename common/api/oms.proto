@@ -1,8 +1,13 @@
 syntax = "proto3";
+import "google/protobuf/timestamp.proto";
 
 option go_package = "github.com/kiriyms/oms_go-common/api";
 
 package api;
+
+/*
+ * ORDER SERVICE
+ */
 
 message Order {
   string        ID         = 1;
@@ -57,4 +62,93 @@ message GetUserOrdersResponse {
 message PatchOrderStatusRequest {
   string      orderID = 1;
   OrderStatus status  = 2;
+}
+
+/*
+ * STOCK SERVICE
+ */
+
+message StockItem {
+  string                    ID          = 1;
+  int32                     Quantity    = 2;
+  string                    Name        = 3;
+  string                    PriceID     = 4;
+  string                    Description = 5;
+  string                    ImgPath     = 6;
+  google.protobuf.Timestamp CreatedAt   = 7;
+  google.protobuf.Timestamp UpdatedAt   = 8;
+}
+
+message BookedItem {
+  string                    BookingID = 1;
+  string                    ItemID    = 2;
+  int32                     Quantity  = 3;
+  string                    OrderID   = 4;
+  google.protobuf.Timestamp ExpiresAt = 5;
+  google.protobuf.Timestamp CreatedAt = 6;
+}
+
+message AddStockItemRequest {
+  string ID          = 1;
+  int32  Quantity    = 2;
+  string Name        = 3;
+  string PriceID     = 4;
+  string Description = 5;
+  string ImgPath     = 6;
+}
+
+message AddStockItemResponse {
+  StockItem Item = 1;
+}
+
+message RemoveStockItemRequest {
+  string ID       = 1;
+  int32  Quantity = 2;
+}
+
+message RemoveStockItemResponse {
+  StockItem Item = 1;
+}
+
+message BookItemsRequest {
+  string                    OrderID = 1;
+  repeated ItemWithQuantity Items   = 2;
+}
+
+message BookItemsResponse {
+  repeated BookedItem Bookings = 1;
+}
+
+message ReleaseBookedItemsRequest {
+  string OrderID = 1;
+}
+
+message ReleaseBookedItemsResponse {
+  bool success = 1;
+}
+
+message VerifyStockRequest {
+  repeated ItemWithQuantity Items = 1;
+}
+
+message VerifyStockResponse {
+  bool                      all_available           = 1;
+  repeated ItemWithQuantity missing_or_insufficient = 2;
+}
+
+message GetStockItemRequest {
+  string ID = 1;
+}
+
+message GetStockItemResponse {
+  StockItem Item = 1;
+}
+
+service StockService {
+  rpc AddStockItem(AddStockItemRequest) returns (AddStockItemResponse);
+  rpc BookItems(BookItemsRequest) returns (BookItemsResponse);
+  rpc ReleaseBookedItems(ReleaseBookedItemsRequest) returns (ReleaseBookedItemsResponse);
+  rpc RemoveStockItem(RemoveStockItemRequest) returns (RemoveStockItemResponse);
+  rpc VerifyStock(VerifyStockRequest) returns (VerifyStockResponse);
+  rpc GetStockItem(GetStockItemRequest) returns (GetStockItemResponse);
 }

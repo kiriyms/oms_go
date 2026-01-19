@@ -233,3 +233,295 @@ var OrderService_ServiceDesc = grpc.ServiceDesc{
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "api/oms.proto",
 }
+
+const (
+	StockService_AddStockItem_FullMethodName       = "/api.StockService/AddStockItem"
+	StockService_BookItems_FullMethodName          = "/api.StockService/BookItems"
+	StockService_ReleaseBookedItems_FullMethodName = "/api.StockService/ReleaseBookedItems"
+	StockService_RemoveStockItem_FullMethodName    = "/api.StockService/RemoveStockItem"
+	StockService_VerifyStock_FullMethodName        = "/api.StockService/VerifyStock"
+	StockService_GetStockItem_FullMethodName       = "/api.StockService/GetStockItem"
+)
+
+// StockServiceClient is the client API for StockService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type StockServiceClient interface {
+	AddStockItem(ctx context.Context, in *AddStockItemRequest, opts ...grpc.CallOption) (*AddStockItemResponse, error)
+	BookItems(ctx context.Context, in *BookItemsRequest, opts ...grpc.CallOption) (*BookItemsResponse, error)
+	ReleaseBookedItems(ctx context.Context, in *ReleaseBookedItemsRequest, opts ...grpc.CallOption) (*ReleaseBookedItemsResponse, error)
+	RemoveStockItem(ctx context.Context, in *RemoveStockItemRequest, opts ...grpc.CallOption) (*RemoveStockItemResponse, error)
+	VerifyStock(ctx context.Context, in *VerifyStockRequest, opts ...grpc.CallOption) (*VerifyStockResponse, error)
+	GetStockItem(ctx context.Context, in *GetStockItemRequest, opts ...grpc.CallOption) (*GetStockItemResponse, error)
+}
+
+type stockServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewStockServiceClient(cc grpc.ClientConnInterface) StockServiceClient {
+	return &stockServiceClient{cc}
+}
+
+func (c *stockServiceClient) AddStockItem(ctx context.Context, in *AddStockItemRequest, opts ...grpc.CallOption) (*AddStockItemResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AddStockItemResponse)
+	err := c.cc.Invoke(ctx, StockService_AddStockItem_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *stockServiceClient) BookItems(ctx context.Context, in *BookItemsRequest, opts ...grpc.CallOption) (*BookItemsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BookItemsResponse)
+	err := c.cc.Invoke(ctx, StockService_BookItems_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *stockServiceClient) ReleaseBookedItems(ctx context.Context, in *ReleaseBookedItemsRequest, opts ...grpc.CallOption) (*ReleaseBookedItemsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ReleaseBookedItemsResponse)
+	err := c.cc.Invoke(ctx, StockService_ReleaseBookedItems_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *stockServiceClient) RemoveStockItem(ctx context.Context, in *RemoveStockItemRequest, opts ...grpc.CallOption) (*RemoveStockItemResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RemoveStockItemResponse)
+	err := c.cc.Invoke(ctx, StockService_RemoveStockItem_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *stockServiceClient) VerifyStock(ctx context.Context, in *VerifyStockRequest, opts ...grpc.CallOption) (*VerifyStockResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(VerifyStockResponse)
+	err := c.cc.Invoke(ctx, StockService_VerifyStock_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *stockServiceClient) GetStockItem(ctx context.Context, in *GetStockItemRequest, opts ...grpc.CallOption) (*GetStockItemResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetStockItemResponse)
+	err := c.cc.Invoke(ctx, StockService_GetStockItem_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// StockServiceServer is the server API for StockService service.
+// All implementations must embed UnimplementedStockServiceServer
+// for forward compatibility.
+type StockServiceServer interface {
+	AddStockItem(context.Context, *AddStockItemRequest) (*AddStockItemResponse, error)
+	BookItems(context.Context, *BookItemsRequest) (*BookItemsResponse, error)
+	ReleaseBookedItems(context.Context, *ReleaseBookedItemsRequest) (*ReleaseBookedItemsResponse, error)
+	RemoveStockItem(context.Context, *RemoveStockItemRequest) (*RemoveStockItemResponse, error)
+	VerifyStock(context.Context, *VerifyStockRequest) (*VerifyStockResponse, error)
+	GetStockItem(context.Context, *GetStockItemRequest) (*GetStockItemResponse, error)
+	mustEmbedUnimplementedStockServiceServer()
+}
+
+// UnimplementedStockServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedStockServiceServer struct{}
+
+func (UnimplementedStockServiceServer) AddStockItem(context.Context, *AddStockItemRequest) (*AddStockItemResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method AddStockItem not implemented")
+}
+func (UnimplementedStockServiceServer) BookItems(context.Context, *BookItemsRequest) (*BookItemsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method BookItems not implemented")
+}
+func (UnimplementedStockServiceServer) ReleaseBookedItems(context.Context, *ReleaseBookedItemsRequest) (*ReleaseBookedItemsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ReleaseBookedItems not implemented")
+}
+func (UnimplementedStockServiceServer) RemoveStockItem(context.Context, *RemoveStockItemRequest) (*RemoveStockItemResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method RemoveStockItem not implemented")
+}
+func (UnimplementedStockServiceServer) VerifyStock(context.Context, *VerifyStockRequest) (*VerifyStockResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method VerifyStock not implemented")
+}
+func (UnimplementedStockServiceServer) GetStockItem(context.Context, *GetStockItemRequest) (*GetStockItemResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetStockItem not implemented")
+}
+func (UnimplementedStockServiceServer) mustEmbedUnimplementedStockServiceServer() {}
+func (UnimplementedStockServiceServer) testEmbeddedByValue()                      {}
+
+// UnsafeStockServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to StockServiceServer will
+// result in compilation errors.
+type UnsafeStockServiceServer interface {
+	mustEmbedUnimplementedStockServiceServer()
+}
+
+func RegisterStockServiceServer(s grpc.ServiceRegistrar, srv StockServiceServer) {
+	// If the following call panics, it indicates UnimplementedStockServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&StockService_ServiceDesc, srv)
+}
+
+func _StockService_AddStockItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddStockItemRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StockServiceServer).AddStockItem(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: StockService_AddStockItem_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StockServiceServer).AddStockItem(ctx, req.(*AddStockItemRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _StockService_BookItems_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BookItemsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StockServiceServer).BookItems(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: StockService_BookItems_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StockServiceServer).BookItems(ctx, req.(*BookItemsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _StockService_ReleaseBookedItems_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReleaseBookedItemsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StockServiceServer).ReleaseBookedItems(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: StockService_ReleaseBookedItems_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StockServiceServer).ReleaseBookedItems(ctx, req.(*ReleaseBookedItemsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _StockService_RemoveStockItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveStockItemRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StockServiceServer).RemoveStockItem(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: StockService_RemoveStockItem_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StockServiceServer).RemoveStockItem(ctx, req.(*RemoveStockItemRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _StockService_VerifyStock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(VerifyStockRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StockServiceServer).VerifyStock(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: StockService_VerifyStock_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StockServiceServer).VerifyStock(ctx, req.(*VerifyStockRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _StockService_GetStockItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetStockItemRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StockServiceServer).GetStockItem(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: StockService_GetStockItem_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StockServiceServer).GetStockItem(ctx, req.(*GetStockItemRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// StockService_ServiceDesc is the grpc.ServiceDesc for StockService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var StockService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "api.StockService",
+	HandlerType: (*StockServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "AddStockItem",
+			Handler:    _StockService_AddStockItem_Handler,
+		},
+		{
+			MethodName: "BookItems",
+			Handler:    _StockService_BookItems_Handler,
+		},
+		{
+			MethodName: "ReleaseBookedItems",
+			Handler:    _StockService_ReleaseBookedItems_Handler,
+		},
+		{
+			MethodName: "RemoveStockItem",
+			Handler:    _StockService_RemoveStockItem_Handler,
+		},
+		{
+			MethodName: "VerifyStock",
+			Handler:    _StockService_VerifyStock_Handler,
+		},
+		{
+			MethodName: "GetStockItem",
+			Handler:    _StockService_GetStockItem_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "api/oms.proto",
+}
