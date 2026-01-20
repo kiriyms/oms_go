@@ -116,15 +116,17 @@ message BookItemsRequest {
 }
 
 message BookItemsResponse {
-  repeated BookedItem Bookings = 1;
+  repeated ItemWithQuantity Bookings = 1;
 }
 
 message ReleaseBookedItemsRequest {
-  string OrderID = 1;
+  string                    OrderID = 1;
+  repeated ItemWithQuantity Items   = 2;
 }
 
 message ReleaseBookedItemsResponse {
   bool success = 1;
+
 }
 
 message VerifyStockRequest {
@@ -144,6 +146,14 @@ message GetStockItemResponse {
   StockItem Item = 1;
 }
 
+message FinalizeBookingRequest {
+  string OrderID = 1;
+}
+
+message FinalizeBookingResponse {
+  bool success = 1;
+}
+
 service StockService {
   rpc AddStockItem(AddStockItemRequest) returns (AddStockItemResponse);
   rpc BookItems(BookItemsRequest) returns (BookItemsResponse);
@@ -151,4 +161,5 @@ service StockService {
   rpc RemoveStockItem(RemoveStockItemRequest) returns (RemoveStockItemResponse);
   rpc VerifyStock(VerifyStockRequest) returns (VerifyStockResponse);
   rpc GetStockItem(GetStockItemRequest) returns (GetStockItemResponse);
+  rpc FinalizeBooking(FinalizeBookingRequest) returns (FinalizeBookingResponse);
 }

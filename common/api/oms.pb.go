@@ -960,7 +960,7 @@ func (x *BookItemsRequest) GetItems() []*ItemWithQuantity {
 
 type BookItemsResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Bookings      []*BookedItem          `protobuf:"bytes,1,rep,name=Bookings,proto3" json:"Bookings,omitempty"`
+	Bookings      []*ItemWithQuantity    `protobuf:"bytes,1,rep,name=Bookings,proto3" json:"Bookings,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -995,7 +995,7 @@ func (*BookItemsResponse) Descriptor() ([]byte, []int) {
 	return file_api_oms_proto_rawDescGZIP(), []int{15}
 }
 
-func (x *BookItemsResponse) GetBookings() []*BookedItem {
+func (x *BookItemsResponse) GetBookings() []*ItemWithQuantity {
 	if x != nil {
 		return x.Bookings
 	}
@@ -1005,6 +1005,7 @@ func (x *BookItemsResponse) GetBookings() []*BookedItem {
 type ReleaseBookedItemsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	OrderID       string                 `protobuf:"bytes,1,opt,name=OrderID,proto3" json:"OrderID,omitempty"`
+	Items         []*ItemWithQuantity    `protobuf:"bytes,2,rep,name=Items,proto3" json:"Items,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1044,6 +1045,13 @@ func (x *ReleaseBookedItemsRequest) GetOrderID() string {
 		return x.OrderID
 	}
 	return ""
+}
+
+func (x *ReleaseBookedItemsRequest) GetItems() []*ItemWithQuantity {
+	if x != nil {
+		return x.Items
+	}
+	return nil
 }
 
 type ReleaseBookedItemsResponse struct {
@@ -1274,6 +1282,94 @@ func (x *GetStockItemResponse) GetItem() *StockItem {
 	return nil
 }
 
+type FinalizeBookingRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	OrderID       string                 `protobuf:"bytes,1,opt,name=OrderID,proto3" json:"OrderID,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *FinalizeBookingRequest) Reset() {
+	*x = FinalizeBookingRequest{}
+	mi := &file_api_oms_proto_msgTypes[22]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *FinalizeBookingRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FinalizeBookingRequest) ProtoMessage() {}
+
+func (x *FinalizeBookingRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_oms_proto_msgTypes[22]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FinalizeBookingRequest.ProtoReflect.Descriptor instead.
+func (*FinalizeBookingRequest) Descriptor() ([]byte, []int) {
+	return file_api_oms_proto_rawDescGZIP(), []int{22}
+}
+
+func (x *FinalizeBookingRequest) GetOrderID() string {
+	if x != nil {
+		return x.OrderID
+	}
+	return ""
+}
+
+type FinalizeBookingResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *FinalizeBookingResponse) Reset() {
+	*x = FinalizeBookingResponse{}
+	mi := &file_api_oms_proto_msgTypes[23]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *FinalizeBookingResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FinalizeBookingResponse) ProtoMessage() {}
+
+func (x *FinalizeBookingResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_api_oms_proto_msgTypes[23]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FinalizeBookingResponse.ProtoReflect.Descriptor instead.
+func (*FinalizeBookingResponse) Descriptor() ([]byte, []int) {
+	return file_api_oms_proto_rawDescGZIP(), []int{23}
+}
+
+func (x *FinalizeBookingResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
 var File_api_oms_proto protoreflect.FileDescriptor
 
 const file_api_oms_proto_rawDesc = "" +
@@ -1344,11 +1440,12 @@ const file_api_oms_proto_rawDesc = "" +
 	"\x04Item\x18\x01 \x01(\v2\x0e.api.StockItemR\x04Item\"Y\n" +
 	"\x10BookItemsRequest\x12\x18\n" +
 	"\aOrderID\x18\x01 \x01(\tR\aOrderID\x12+\n" +
-	"\x05Items\x18\x02 \x03(\v2\x15.api.ItemWithQuantityR\x05Items\"@\n" +
-	"\x11BookItemsResponse\x12+\n" +
-	"\bBookings\x18\x01 \x03(\v2\x0f.api.BookedItemR\bBookings\"5\n" +
+	"\x05Items\x18\x02 \x03(\v2\x15.api.ItemWithQuantityR\x05Items\"F\n" +
+	"\x11BookItemsResponse\x121\n" +
+	"\bBookings\x18\x01 \x03(\v2\x15.api.ItemWithQuantityR\bBookings\"b\n" +
 	"\x19ReleaseBookedItemsRequest\x12\x18\n" +
-	"\aOrderID\x18\x01 \x01(\tR\aOrderID\"6\n" +
+	"\aOrderID\x18\x01 \x01(\tR\aOrderID\x12+\n" +
+	"\x05Items\x18\x02 \x03(\v2\x15.api.ItemWithQuantityR\x05Items\"6\n" +
 	"\x1aReleaseBookedItemsResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\"A\n" +
 	"\x12VerifyStockRequest\x12+\n" +
@@ -1359,7 +1456,11 @@ const file_api_oms_proto_rawDesc = "" +
 	"\x13GetStockItemRequest\x12\x0e\n" +
 	"\x02ID\x18\x01 \x01(\tR\x02ID\":\n" +
 	"\x14GetStockItemResponse\x12\"\n" +
-	"\x04Item\x18\x01 \x01(\v2\x0e.api.StockItemR\x04Item*D\n" +
+	"\x04Item\x18\x01 \x01(\v2\x0e.api.StockItemR\x04Item\"2\n" +
+	"\x16FinalizeBookingRequest\x12\x18\n" +
+	"\aOrderID\x18\x01 \x01(\tR\aOrderID\"3\n" +
+	"\x17FinalizeBookingResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess*D\n" +
 	"\vOrderStatus\x12\v\n" +
 	"\aUNKNOWN\x10\x00\x12\v\n" +
 	"\aPENDING\x10\x01\x12\r\n" +
@@ -1372,14 +1473,15 @@ const file_api_oms_proto_rawDesc = "" +
 	".api.Order\x12F\n" +
 	"\rGetUserOrders\x12\x19.api.GetUserOrdersRequest\x1a\x1a.api.GetUserOrdersResponse\x12<\n" +
 	"\x10PatchOrderStatus\x12\x1c.api.PatchOrderStatusRequest\x1a\n" +
-	".api.Order2\xbb\x03\n" +
+	".api.Order2\x89\x04\n" +
 	"\fStockService\x12C\n" +
 	"\fAddStockItem\x12\x18.api.AddStockItemRequest\x1a\x19.api.AddStockItemResponse\x12:\n" +
 	"\tBookItems\x12\x15.api.BookItemsRequest\x1a\x16.api.BookItemsResponse\x12U\n" +
 	"\x12ReleaseBookedItems\x12\x1e.api.ReleaseBookedItemsRequest\x1a\x1f.api.ReleaseBookedItemsResponse\x12L\n" +
 	"\x0fRemoveStockItem\x12\x1b.api.RemoveStockItemRequest\x1a\x1c.api.RemoveStockItemResponse\x12@\n" +
 	"\vVerifyStock\x12\x17.api.VerifyStockRequest\x1a\x18.api.VerifyStockResponse\x12C\n" +
-	"\fGetStockItem\x12\x18.api.GetStockItemRequest\x1a\x19.api.GetStockItemResponseB&Z$github.com/kiriyms/oms_go-common/apib\x06proto3"
+	"\fGetStockItem\x12\x18.api.GetStockItemRequest\x1a\x19.api.GetStockItemResponse\x12L\n" +
+	"\x0fFinalizeBooking\x12\x1b.api.FinalizeBookingRequest\x1a\x1c.api.FinalizeBookingResponseB&Z$github.com/kiriyms/oms_go-common/apib\x06proto3"
 
 var (
 	file_api_oms_proto_rawDescOnce sync.Once
@@ -1394,7 +1496,7 @@ func file_api_oms_proto_rawDescGZIP() []byte {
 }
 
 var file_api_oms_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_api_oms_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
+var file_api_oms_proto_msgTypes = make([]protoimpl.MessageInfo, 24)
 var file_api_oms_proto_goTypes = []any{
 	(OrderStatus)(0),                   // 0: api.OrderStatus
 	(*Order)(nil),                      // 1: api.Order
@@ -1419,49 +1521,54 @@ var file_api_oms_proto_goTypes = []any{
 	(*VerifyStockResponse)(nil),        // 20: api.VerifyStockResponse
 	(*GetStockItemRequest)(nil),        // 21: api.GetStockItemRequest
 	(*GetStockItemResponse)(nil),       // 22: api.GetStockItemResponse
-	(*timestamppb.Timestamp)(nil),      // 23: google.protobuf.Timestamp
+	(*FinalizeBookingRequest)(nil),     // 23: api.FinalizeBookingRequest
+	(*FinalizeBookingResponse)(nil),    // 24: api.FinalizeBookingResponse
+	(*timestamppb.Timestamp)(nil),      // 25: google.protobuf.Timestamp
 }
 var file_api_oms_proto_depIdxs = []int32{
 	2,  // 0: api.Order.Items:type_name -> api.Item
 	3,  // 1: api.CreateOrderRequest.Items:type_name -> api.ItemWithQuantity
 	1,  // 2: api.GetUserOrdersResponse.Orders:type_name -> api.Order
 	0,  // 3: api.PatchOrderStatusRequest.status:type_name -> api.OrderStatus
-	23, // 4: api.StockItem.CreatedAt:type_name -> google.protobuf.Timestamp
-	23, // 5: api.StockItem.UpdatedAt:type_name -> google.protobuf.Timestamp
-	23, // 6: api.BookedItem.ExpiresAt:type_name -> google.protobuf.Timestamp
-	23, // 7: api.BookedItem.CreatedAt:type_name -> google.protobuf.Timestamp
+	25, // 4: api.StockItem.CreatedAt:type_name -> google.protobuf.Timestamp
+	25, // 5: api.StockItem.UpdatedAt:type_name -> google.protobuf.Timestamp
+	25, // 6: api.BookedItem.ExpiresAt:type_name -> google.protobuf.Timestamp
+	25, // 7: api.BookedItem.CreatedAt:type_name -> google.protobuf.Timestamp
 	9,  // 8: api.AddStockItemResponse.Item:type_name -> api.StockItem
 	9,  // 9: api.RemoveStockItemResponse.Item:type_name -> api.StockItem
 	3,  // 10: api.BookItemsRequest.Items:type_name -> api.ItemWithQuantity
-	10, // 11: api.BookItemsResponse.Bookings:type_name -> api.BookedItem
-	3,  // 12: api.VerifyStockRequest.Items:type_name -> api.ItemWithQuantity
-	3,  // 13: api.VerifyStockResponse.missing_or_insufficient:type_name -> api.ItemWithQuantity
-	9,  // 14: api.GetStockItemResponse.Item:type_name -> api.StockItem
-	4,  // 15: api.OrderService.CreateOrder:input_type -> api.CreateOrderRequest
-	5,  // 16: api.OrderService.GetOrder:input_type -> api.GetOrderRequest
-	6,  // 17: api.OrderService.GetUserOrders:input_type -> api.GetUserOrdersRequest
-	8,  // 18: api.OrderService.PatchOrderStatus:input_type -> api.PatchOrderStatusRequest
-	11, // 19: api.StockService.AddStockItem:input_type -> api.AddStockItemRequest
-	15, // 20: api.StockService.BookItems:input_type -> api.BookItemsRequest
-	17, // 21: api.StockService.ReleaseBookedItems:input_type -> api.ReleaseBookedItemsRequest
-	13, // 22: api.StockService.RemoveStockItem:input_type -> api.RemoveStockItemRequest
-	19, // 23: api.StockService.VerifyStock:input_type -> api.VerifyStockRequest
-	21, // 24: api.StockService.GetStockItem:input_type -> api.GetStockItemRequest
-	1,  // 25: api.OrderService.CreateOrder:output_type -> api.Order
-	1,  // 26: api.OrderService.GetOrder:output_type -> api.Order
-	7,  // 27: api.OrderService.GetUserOrders:output_type -> api.GetUserOrdersResponse
-	1,  // 28: api.OrderService.PatchOrderStatus:output_type -> api.Order
-	12, // 29: api.StockService.AddStockItem:output_type -> api.AddStockItemResponse
-	16, // 30: api.StockService.BookItems:output_type -> api.BookItemsResponse
-	18, // 31: api.StockService.ReleaseBookedItems:output_type -> api.ReleaseBookedItemsResponse
-	14, // 32: api.StockService.RemoveStockItem:output_type -> api.RemoveStockItemResponse
-	20, // 33: api.StockService.VerifyStock:output_type -> api.VerifyStockResponse
-	22, // 34: api.StockService.GetStockItem:output_type -> api.GetStockItemResponse
-	25, // [25:35] is the sub-list for method output_type
-	15, // [15:25] is the sub-list for method input_type
-	15, // [15:15] is the sub-list for extension type_name
-	15, // [15:15] is the sub-list for extension extendee
-	0,  // [0:15] is the sub-list for field type_name
+	3,  // 11: api.BookItemsResponse.Bookings:type_name -> api.ItemWithQuantity
+	3,  // 12: api.ReleaseBookedItemsRequest.Items:type_name -> api.ItemWithQuantity
+	3,  // 13: api.VerifyStockRequest.Items:type_name -> api.ItemWithQuantity
+	3,  // 14: api.VerifyStockResponse.missing_or_insufficient:type_name -> api.ItemWithQuantity
+	9,  // 15: api.GetStockItemResponse.Item:type_name -> api.StockItem
+	4,  // 16: api.OrderService.CreateOrder:input_type -> api.CreateOrderRequest
+	5,  // 17: api.OrderService.GetOrder:input_type -> api.GetOrderRequest
+	6,  // 18: api.OrderService.GetUserOrders:input_type -> api.GetUserOrdersRequest
+	8,  // 19: api.OrderService.PatchOrderStatus:input_type -> api.PatchOrderStatusRequest
+	11, // 20: api.StockService.AddStockItem:input_type -> api.AddStockItemRequest
+	15, // 21: api.StockService.BookItems:input_type -> api.BookItemsRequest
+	17, // 22: api.StockService.ReleaseBookedItems:input_type -> api.ReleaseBookedItemsRequest
+	13, // 23: api.StockService.RemoveStockItem:input_type -> api.RemoveStockItemRequest
+	19, // 24: api.StockService.VerifyStock:input_type -> api.VerifyStockRequest
+	21, // 25: api.StockService.GetStockItem:input_type -> api.GetStockItemRequest
+	23, // 26: api.StockService.FinalizeBooking:input_type -> api.FinalizeBookingRequest
+	1,  // 27: api.OrderService.CreateOrder:output_type -> api.Order
+	1,  // 28: api.OrderService.GetOrder:output_type -> api.Order
+	7,  // 29: api.OrderService.GetUserOrders:output_type -> api.GetUserOrdersResponse
+	1,  // 30: api.OrderService.PatchOrderStatus:output_type -> api.Order
+	12, // 31: api.StockService.AddStockItem:output_type -> api.AddStockItemResponse
+	16, // 32: api.StockService.BookItems:output_type -> api.BookItemsResponse
+	18, // 33: api.StockService.ReleaseBookedItems:output_type -> api.ReleaseBookedItemsResponse
+	14, // 34: api.StockService.RemoveStockItem:output_type -> api.RemoveStockItemResponse
+	20, // 35: api.StockService.VerifyStock:output_type -> api.VerifyStockResponse
+	22, // 36: api.StockService.GetStockItem:output_type -> api.GetStockItemResponse
+	24, // 37: api.StockService.FinalizeBooking:output_type -> api.FinalizeBookingResponse
+	27, // [27:38] is the sub-list for method output_type
+	16, // [16:27] is the sub-list for method input_type
+	16, // [16:16] is the sub-list for extension type_name
+	16, // [16:16] is the sub-list for extension extendee
+	0,  // [0:16] is the sub-list for field type_name
 }
 
 func init() { file_api_oms_proto_init() }
@@ -1475,7 +1582,7 @@ func file_api_oms_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_oms_proto_rawDesc), len(file_api_oms_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   22,
+			NumMessages:   24,
 			NumExtensions: 0,
 			NumServices:   2,
 		},

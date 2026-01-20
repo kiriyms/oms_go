@@ -241,6 +241,7 @@ const (
 	StockService_RemoveStockItem_FullMethodName    = "/api.StockService/RemoveStockItem"
 	StockService_VerifyStock_FullMethodName        = "/api.StockService/VerifyStock"
 	StockService_GetStockItem_FullMethodName       = "/api.StockService/GetStockItem"
+	StockService_FinalizeBooking_FullMethodName    = "/api.StockService/FinalizeBooking"
 )
 
 // StockServiceClient is the client API for StockService service.
@@ -253,6 +254,7 @@ type StockServiceClient interface {
 	RemoveStockItem(ctx context.Context, in *RemoveStockItemRequest, opts ...grpc.CallOption) (*RemoveStockItemResponse, error)
 	VerifyStock(ctx context.Context, in *VerifyStockRequest, opts ...grpc.CallOption) (*VerifyStockResponse, error)
 	GetStockItem(ctx context.Context, in *GetStockItemRequest, opts ...grpc.CallOption) (*GetStockItemResponse, error)
+	FinalizeBooking(ctx context.Context, in *FinalizeBookingRequest, opts ...grpc.CallOption) (*FinalizeBookingResponse, error)
 }
 
 type stockServiceClient struct {
@@ -323,6 +325,16 @@ func (c *stockServiceClient) GetStockItem(ctx context.Context, in *GetStockItemR
 	return out, nil
 }
 
+func (c *stockServiceClient) FinalizeBooking(ctx context.Context, in *FinalizeBookingRequest, opts ...grpc.CallOption) (*FinalizeBookingResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(FinalizeBookingResponse)
+	err := c.cc.Invoke(ctx, StockService_FinalizeBooking_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // StockServiceServer is the server API for StockService service.
 // All implementations must embed UnimplementedStockServiceServer
 // for forward compatibility.
@@ -333,6 +345,7 @@ type StockServiceServer interface {
 	RemoveStockItem(context.Context, *RemoveStockItemRequest) (*RemoveStockItemResponse, error)
 	VerifyStock(context.Context, *VerifyStockRequest) (*VerifyStockResponse, error)
 	GetStockItem(context.Context, *GetStockItemRequest) (*GetStockItemResponse, error)
+	FinalizeBooking(context.Context, *FinalizeBookingRequest) (*FinalizeBookingResponse, error)
 	mustEmbedUnimplementedStockServiceServer()
 }
 
@@ -360,6 +373,9 @@ func (UnimplementedStockServiceServer) VerifyStock(context.Context, *VerifyStock
 }
 func (UnimplementedStockServiceServer) GetStockItem(context.Context, *GetStockItemRequest) (*GetStockItemResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetStockItem not implemented")
+}
+func (UnimplementedStockServiceServer) FinalizeBooking(context.Context, *FinalizeBookingRequest) (*FinalizeBookingResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method FinalizeBooking not implemented")
 }
 func (UnimplementedStockServiceServer) mustEmbedUnimplementedStockServiceServer() {}
 func (UnimplementedStockServiceServer) testEmbeddedByValue()                      {}
@@ -490,6 +506,24 @@ func _StockService_GetStockItem_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _StockService_FinalizeBooking_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FinalizeBookingRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StockServiceServer).FinalizeBooking(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: StockService_FinalizeBooking_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StockServiceServer).FinalizeBooking(ctx, req.(*FinalizeBookingRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // StockService_ServiceDesc is the grpc.ServiceDesc for StockService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -520,6 +554,10 @@ var StockService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetStockItem",
 			Handler:    _StockService_GetStockItem_Handler,
+		},
+		{
+			MethodName: "FinalizeBooking",
+			Handler:    _StockService_FinalizeBooking_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
