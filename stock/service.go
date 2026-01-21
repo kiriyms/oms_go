@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"log"
 
 	pb "github.com/kiriyms/oms_go-common/api"
 )
@@ -46,6 +47,9 @@ func (s *service) BookStockItems(ctx context.Context, req *pb.BookItemsRequest) 
 		}
 		bookedItems = append(bookedItems, bItem)
 	}
+
+	log.Printf("Booked items: %v", bookedItems)
+
 	return bookedItems, nil
 }
 
@@ -66,6 +70,7 @@ func (s *service) RemoveStockItem(ctx context.Context, itemID string) (*pb.Stock
 }
 
 func (s *service) VerifyStock(ctx context.Context, req *pb.VerifyStockRequest) (*pb.VerifyStockResponse, error) {
+	log.Printf("Validating stock request: %v", req.Items)
 	return s.store.VerifyStock(ctx, req.Items), nil
 }
 

@@ -5,15 +5,27 @@ import (
 	"net"
 
 	common "github.com/kiriyms/oms_go-common"
+	pb "github.com/kiriyms/oms_go-common/api"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 var (
-	grpcAddr = common.GetEnv("GRPC_ADDR", "localhost:50051")
-	dbPath   = common.GetEnv("DB_PATH", "./db/db.db")
+	grpcAddr         = common.GetEnv("GRPC_ADDR", "localhost:50051")
+	dbPath           = common.GetEnv("DB_PATH", "./db/db.db")
+	stockServiceAddr = common.GetEnv("STOCK_SERVICE_ADDR", "localhost:50052")
 )
 
 func main() {
+	stockConn, err := grpc.NewClient(stockServiceAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Fatalf("Failed to connect to Stock Service: %v", err)
+	}
+	defer stockConn.Close()
+	log.Println("Dialed Stock Service at ", stockServiceAddr)
+
+	stockC := pb.NewStockServiceClient(stockConn)
+
 	grpcServer := grpc.NewServer()
 	l, err := net.Listen("tcp", grpcAddr)
 	if err != nil {
@@ -27,8 +39,8 @@ func main() {
 	}
 	defer store.Close()
 
-	service := NewOrderService(store)
-	NewHandler(grpcServer, service)
+	service := NewOrderService(store, stockC)
+	NewHandler(grpcServer, service, stockC)
 
 	log.Println("gRPC server listening on", grpcAddr)
 

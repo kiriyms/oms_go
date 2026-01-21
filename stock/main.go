@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	grpcAddr = common.GetEnv("GRPC_ADDR", "localhost:50051")
+	grpcAddr = common.GetEnv("GRPC_ADDR", "localhost:50052")
 	dbPath   = common.GetEnv("DB_PATH", "./db/db.db")
 )
 

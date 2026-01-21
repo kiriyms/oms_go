@@ -17,14 +17,20 @@ type OrderService interface {
 }
 
 type service struct {
-	store OrderStore
+	store       OrderStore
+	stockClient pb.StockServiceClient
 }
 
-func NewOrderService(store OrderStore) *service {
-	return &service{store: store}
+func NewOrderService(store OrderStore, stockClient pb.StockServiceClient) *service {
+	return &service{store: store, stockClient: stockClient}
 }
 
 func (s *service) CreateOrder(ctx context.Context, o *pb.Order) error {
+	log.Printf("Creating order: %v", o)
+	merged := mergeItemsQuantities(mapItemToItemWithQuantity(o.Items))
+	s.stockClient.BookItems(ctx, &pb.BookItemsRequest{
+		Items: merged,
+	})
 	return s.store.Create(ctx, o)
 }
 
@@ -36,7 +42,21 @@ func (s *service) ValidateOrder(ctx context.Context, p *pb.CreateOrderRequest) e
 	merged := mergeItemsQuantities(p.Items)
 	log.Printf("Merged items: %v", merged)
 
-	// validate with store service
+	resp, err := s.stockClient.VerifyStock(ctx, &pb.VerifyStockRequest{
+		Items: merged,
+	})
+
+	if err != nil {
+		log.Printf("Error verifying stock: %v", err)
+		return err
+	}
+
+	if !resp.AllAvailable {
+		log.Printf("Error verifying stock: %v", err)
+		return common.ErrNoStock
+	}
+
+	log.Printf("Validated order: %v", resp.AllAvailable)
 
 	return nil
 }
@@ -69,4 +89,15 @@ func mergeItemsQuantities(items []*pb.ItemWithQuantity) []*pb.ItemWithQuantity {
 	}
 
 	return merged
+}
+
+func mapItemToItemWithQuantity(items []*pb.Item) []*pb.ItemWithQuantity {
+	iwq := make([]*pb.ItemWithQuantity, 0)
+	for _, item := range items {
+		iwq = append(iwq, &pb.ItemWithQuantity{
+			ID:       item.ID,
+			Quantity: item.Quantity,
+		})
+	}
+	return iwq
 }

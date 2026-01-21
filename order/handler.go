@@ -11,12 +11,14 @@ import (
 
 type Handler struct {
 	pb.UnimplementedOrderServiceServer
-	service OrderService
+	service     OrderService
+	stockClient pb.StockServiceClient
 }
 
-func NewHandler(s *grpc.Server, service OrderService) *Handler {
+func NewHandler(s *grpc.Server, service OrderService, stockClient pb.StockServiceClient) *Handler {
 	h := &Handler{
-		service: service,
+		service:     service,
+		stockClient: stockClient,
 	}
 	pb.RegisterOrderServiceServer(s, h)
 	return h
