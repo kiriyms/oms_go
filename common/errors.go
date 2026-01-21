@@ -4,4 +4,5 @@ import "errors"
 
 var (
 	ErrNoItems = errors.New("items must contain at least one item")
+	ErrNoStock = errors.New("no stock available for one or more items")
 )
