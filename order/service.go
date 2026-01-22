@@ -29,7 +29,8 @@ func (s *service) CreateOrder(ctx context.Context, o *pb.Order) error {
 	log.Printf("Creating order: %v", o)
 	merged := mergeItemsQuantities(mapItemToItemWithQuantity(o.Items))
 	s.stockClient.BookItems(ctx, &pb.BookItemsRequest{
-		Items: merged,
+		Items:   merged,
+		OrderID: o.ID,
 	})
 	return s.store.Create(ctx, o)
 }

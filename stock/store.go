@@ -13,7 +13,7 @@ import (
 
 type StockStore interface {
 	AddStockItem(ctx context.Context, item *pb.StockItem) (*pb.StockItem, error)
-	BookStockItem(ctx context.Context, itemID string, quantity int32) (*pb.ItemWithQuantity, error)
+	BookStockItem(ctx context.Context, itemID string, quantity int32, orderID string) (*pb.ItemWithQuantity, error)
 	ReleaseBookItem(ctx context.Context, itemID string, quantity int32) (*pb.ItemWithQuantity, error)
 	RemoveStockItem(ctx context.Context, itemID string) (*pb.StockItem, error)
 	VerifyStock(ctx context.Context, items []*pb.ItemWithQuantity) *pb.VerifyStockResponse
@@ -70,7 +70,7 @@ func (s *store) AddStockItem(ctx context.Context, item *pb.StockItem) (*pb.Stock
 	return item, nil
 }
 
-func (s *store) BookStockItem(ctx context.Context, itemID string, quantity int32) (*pb.ItemWithQuantity, error) {
+func (s *store) BookStockItem(ctx context.Context, itemID string, quantity int32, orderID string) (*pb.ItemWithQuantity, error) {
 	log.Printf("Booking stock item %s qty %d", itemID, quantity)
 
 	if quantity <= 0 {
@@ -116,10 +116,11 @@ func (s *store) BookStockItem(ctx context.Context, itemID string, quantity int32
 
 	_, err = tx.ExecContext(ctx, `
 		INSERT INTO booked_items (booking_id, item_id, quantity, order_id, expires_at, created_at)
-		VALUES (lower(hex(randomblob(16))), ?, ?, '', ?, CURRENT_TIMESTAMP)
+		VALUES (lower(hex(randomblob(16))), ?, ?, ?, ?, CURRENT_TIMESTAMP)
 	`,
 		itemID,
 		quantity,
+		orderID,
 		expiresAt,
 	)
 	if err != nil {

@@ -41,7 +41,7 @@ func (s *service) AddStockItem(ctx context.Context, req *pb.AddStockItemRequest)
 func (s *service) BookStockItems(ctx context.Context, req *pb.BookItemsRequest) ([]*pb.ItemWithQuantity, error) {
 	var bookedItems []*pb.ItemWithQuantity
 	for _, item := range req.Items {
-		bItem, err := s.store.BookStockItem(ctx, item.ID, item.Quantity)
+		bItem, err := s.store.BookStockItem(ctx, item.ID, item.Quantity, req.OrderID)
 		if err != nil {
 			return nil, err
 		}
