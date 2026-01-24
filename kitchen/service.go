@@ -1,11 +1,16 @@
 package main
 
-import pb "github.com/kiriyms/oms_go-common/api"
+import (
+	"context"
+	"time"
+
+	pb "github.com/kiriyms/oms_go-common/api"
+)
 
 type KitchenService interface {
-	AcceptOrder(*pb.Order) error
-	ProcessOrder(*pb.Order) error
-	FinishOrder(string) error
+	AcceptOrder(context.Context, *pb.Order) error
+	ProcessOrder(context.Context, *pb.Order) error
+	FinishOrder(context.Context, string) error
 }
 
 type service struct {
@@ -16,18 +21,18 @@ func NewService(store Store) *service {
 	return &service{store: store}
 }
 
-func (s *service) AcceptOrder(o *pb.Order) error {
-	// Add to DB queue
+func (s *service) AcceptOrder(ctx context.Context, o *pb.Order) error {
+	s.store.AcceptOrder(ctx, o)
 	return nil
 }
 
-func (s *service) ProcessOrder(o *pb.Order) error {
-	// Sleep, simulate processing
+func (s *service) ProcessOrder(ctx context.Context, o *pb.Order) error {
+	time.Sleep(30 * time.Second)
 	return nil
 }
 
-func (s *service) FinishOrder(orderId string) error {
-	// Remove from DB queue
+func (s *service) FinishOrder(ctx context.Context, orderId string) error {
+	s.store.FinishOrder(ctx, orderId)
 	// Send to Kafka
 	return nil
 }
