@@ -13,12 +13,14 @@ type Handler struct {
 	pb.UnimplementedOrderServiceServer
 	service     OrderService
 	stockClient pb.StockServiceClient
+	producer    *Producer
 }
 
-func NewHandler(s *grpc.Server, service OrderService, stockClient pb.StockServiceClient) *Handler {
+func NewHandler(s *grpc.Server, service OrderService, stockClient pb.StockServiceClient, producer *Producer) *Handler {
 	h := &Handler{
 		service:     service,
 		stockClient: stockClient,
+		producer:    producer,
 	}
 	pb.RegisterOrderServiceServer(s, h)
 	return h
@@ -40,6 +42,13 @@ func (h *Handler) CreateOrder(ctx context.Context, p *pb.CreateOrderRequest) (*p
 	if err != nil {
 		return nil, err
 	}
+
+	err = h.producer.PublishOrderCreated(ctx, o)
+	if err != nil {
+		log.Printf("Failed to publish order.created event: %v", err)
+		return nil, err
+	}
+
 	return o, nil
 }
 

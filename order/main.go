@@ -14,6 +14,7 @@ var (
 	grpcAddr         = common.GetEnv("GRPC_ADDR", "localhost:50051")
 	dbPath           = common.GetEnv("DB_PATH", "./db/db.db")
 	stockServiceAddr = common.GetEnv("STOCK_SERVICE_ADDR", "localhost:50052")
+	brokerURL        = common.GetEnv("KAFKA_BROKER_URL", "localhost:9092")
 )
 
 func main() {
@@ -39,8 +40,11 @@ func main() {
 	}
 	defer store.Close()
 
+	producer := NewProducer(brokerURL)
+	defer producer.Close()
+
 	service := NewOrderService(store, stockC)
-	NewHandler(grpcServer, service, stockC)
+	NewHandler(grpcServer, service, stockC, producer)
 
 	log.Println("gRPC server listening on", grpcAddr)
 
