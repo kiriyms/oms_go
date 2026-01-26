@@ -11,10 +11,11 @@ import (
 )
 
 type Consumer struct {
-	reader *kafka.Reader
+	reader  *kafka.Reader
+	service KitchenService
 }
 
-func NewConsumer(brokerURL string, groupID string) *Consumer {
+func NewConsumer(brokerURL string, groupID string, service KitchenService) *Consumer {
 	reader := kafka.NewReader(kafka.ReaderConfig{
 		Brokers:  []string{brokerURL},
 		Topic:    "orders.created",
@@ -23,7 +24,7 @@ func NewConsumer(brokerURL string, groupID string) *Consumer {
 		MaxBytes: 10e6,
 	})
 
-	return &Consumer{reader: reader}
+	return &Consumer{reader: reader, service: service}
 }
 
 func (c *Consumer) Start(ctx context.Context) {
@@ -42,7 +43,20 @@ func (c *Consumer) Start(ctx context.Context) {
 			continue
 		}
 
-		log.Printf("Received order %s", event.ID)
+		go func() {
+			log.Printf("Received order %s", event.ID)
+			if err := c.service.AcceptOrder(ctx, &event); err != nil {
+				log.Printf("failed to accept order: %v", err)
+			}
+
+			if err := c.service.ProcessOrder(ctx, &event); err != nil {
+				log.Printf("failed to process order: %v", err)
+			}
+
+			if err := c.service.FinishOrder(ctx, event.ID); err != nil {
+				log.Printf("failed to finish order: %v", err)
+			}
+		}()
 	}
 }
 
